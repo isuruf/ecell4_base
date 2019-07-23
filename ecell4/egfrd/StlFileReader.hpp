@@ -35,7 +35,18 @@ class StlFileReader
     ~StlFileReader(){}
 
     std::vector<triangle_type>
-    read(const std::string& filename, const FileType t) const;
+    read(const std::string& filename, const FileType t) const
+    {
+        switch(type)
+        {
+            case Ascii:
+                return this->read_ascii(filename);
+            case Binary:
+                return this->read_binary(filename);
+            default:
+                throw std::invalid_argument("stl unknown type");
+        }
+    }
 
   private:
 
@@ -53,27 +64,13 @@ class StlFileReader
 
 template<typename coordT>
 std::vector<StlTriangle<coordT> >
-StlFileReader<coordT>::read(const std::string& filename,
-        const typename StlFileReader<coordT>::FileType type) const
-{
-    switch(type)
-    {
-        case Ascii:
-            return this->read_ascii(filename);
-        case Binary:
-            return this->read_binary(filename);
-        default:
-            throw std::invalid_argument("stl unknown type");
-    }
-}
-
-template<typename coordT>
-std::vector<StlTriangle<coordT> >
 StlFileReader<coordT>::read_ascii(const std::string& filename) const
 {
     std::ifstream ifs(filename.c_str());
     if(!ifs.good())
+    {
         throw std::runtime_error("file open error");
+    }
 
     while(!ifs.eof())
     {
@@ -168,7 +165,7 @@ coordT StlFileReader<coordT>::read_ascii_vertex(const std::string& line) const
     std::istringstream iss(line);
     std::string prefix;
     iss >> prefix;
-    if(prefix != "vertex") throw std::invalid_argument("not vertex line");
+    if(prefix != "vertex") {throw std::invalid_argument("not vertex line");}
     valueT x, y, z;
     iss >> x >> y >> z;
     return coordT(x, y, z);
@@ -182,7 +179,9 @@ coordT StlFileReader<coordT>::read_ascii_normal(const std::string& line) const
     std::string facet, normal;
     iss >> facet >> normal;
     if(facet != "facet" || normal != "normal")
+    {
         throw std::invalid_argument("not vertex line");
+    }
     valueT x, y, z;
     iss >> x >> y >> z;
     return coordT(x, y, z);
@@ -194,7 +193,9 @@ StlFileReader<coordT>::read_binary(const std::string& filename) const
 {
     std::ifstream ifs(filename.c_str(), std::ios::in | std::ios::binary);
     if(!ifs.good())
+    {
         throw std::runtime_error("file open error");
+    }
 
     ifs.seekg(0, ifs.end);
     const std::size_t size_of_file = ifs.tellg();
