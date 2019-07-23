@@ -40,11 +40,17 @@ class StlFileReader
         switch(type)
         {
             case Ascii:
+            {
                 return this->read_ascii(filename);
+            }
             case Binary:
+            {
                 return this->read_binary(filename);
+            }
             default:
+            {
                 throw std::invalid_argument("stl unknown type");
+            }
         }
     }
 
