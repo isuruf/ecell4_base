@@ -35,7 +35,7 @@ class StlFileReader
     ~StlFileReader(){}
 
     std::vector<triangle_type>
-    read(const std::string& filename, const FileType t) const
+    read(const std::string& filename, const FileType type) const
     {
         switch(type)
         {
