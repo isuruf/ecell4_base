@@ -53,8 +53,8 @@ class StlFileReader
 
 template<typename coordT>
 std::vector<StlTriangle<coordT> >
-StlFileReader<coordT>::read(
-    const std::string& filename, const StlFileReader<coordT>::FileType type) const
+StlFileReader<coordT>::read(const std::string& filename,
+        const typename StlFileReader<coordT>::FileType type) const
 {
     switch(type)
     {
